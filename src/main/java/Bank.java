@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ public class Bank{
 
         System.out.println("\n Welcome to the Registration window\n");
 
-        System.out.println("Enter name and then balance");
+        System.out.println("Enter name, balance and password");
 
         String name = scan.next();
         int balance = scan.nextInt();
@@ -23,7 +24,7 @@ public class Bank{
     }
 
     public static void showUser(User user){
-        System.out.println("ID: " + user.id + ", PWS: " + user.getPws());
+        System.out.println("Account number: " + user.getAccountNumber() + ", PWS: " + user.getPws() + "\n");
     }
 
     public static void toRegister(User user){
@@ -36,16 +37,11 @@ public class Bank{
 
         //int newNewBalance = 0;
 
-        User gottenUser = null;
-        for (User user : listOfPeople) {
-            if(id.equals(String.valueOf(user.id))){
-                gottenUser = user;
-            }
-        }
+        User gottenUser = getUserBasedOnId(id);
 
         try{
             assert gottenUser != null;
-            if(gottenUser.getBalance() < 0){
+            if(gottenUser.getBalance() > 0){
                 int currentBalance = gottenUser.getBalance();
                 int newBalance = currentBalance + amountToAdd;
 
@@ -65,16 +61,11 @@ public class Bank{
 
         //int newNewBalance = 0;
 
-        User gottenUser = null;
-        for (User user : listOfPeople) {
-            if(id.equals(String.valueOf(user.id))){
-                gottenUser = user;
-            }
-        }
+        User gottenUser = getUserBasedOnId(id);
 
         try{
             assert gottenUser != null;
-            if(gottenUser.getBalance() < 0){
+            if(gottenUser.getBalance() >= 0){
                 int currentBalance = gottenUser.getBalance();
                 int newBalance = currentBalance - amountToRemove;
 
@@ -91,31 +82,30 @@ public class Bank{
     }
 
 
-    public static void isUserInSystem(){
+    // Is user in systems based on ID
+    public static void isUserInSystem(String id){
 
-        User user = getUserBasedOnId();
-
-        if(listOfPeople.contains(user)){
-            System.out.println("User of ID: " + user.id + " EXIST in the system");
-        } else{
-            System.out.println("User of ID: " + user.id + " does NOT EXIST in the system");
-        }
-
-    }
-
-    public static User getUserBasedOnId(){
-
-        System.out.println("Enter a user ID to search");
-        String userIdToSearch = scan.next();
-
-        User foundUser = null;
+        String gottenID = null;
         for (User listOfPerson : listOfPeople) {
-            boolean equals = userIdToSearch.equals(String.valueOf(listOfPerson.id));
-            if(equals){
-                foundUser = listOfPerson;
+            if(Objects.equals(id, String.valueOf(listOfPerson.id))){
+                gottenID = id;
             }
         }
-        return foundUser;
+
+        if(gottenID == id){
+            System.out.println("User of ID: " + id + " EXIST in the system");
+        } else {
+            System.out.println("User of ID: " + id + " does NOT EXIST in the system");
+        }
+
+        //User user = getUserBasedOnId(id);
+
+        //assert user != null;
+        //if(listOfPeople.contains(user)){
+        //    System.out.println("User of ID: " + user.id + " EXIST in the system");
+        //} else {
+        //    System.out.println("User of ID: " + user.id + " does NOT EXIST in the system");
+        //}
     }
 
     public static void toRemoveAndReplaceUser(String id, User user){
@@ -138,6 +128,20 @@ public class Bank{
         //assertThat(aList).isEqualTo(EXPECTED);
 
     }
+
+    // Get user based on ID
+    public static User getUserBasedOnId(String userId){
+
+        User foundUser = null;
+        for (User listOfPerson : listOfPeople) {
+            boolean equals = userId.equals(String.valueOf(listOfPerson.id));
+            if(equals){
+                foundUser = listOfPerson;
+            }
+        }
+        return foundUser;
+    }
+
 
     /**
      * Prints all the people from the list of User
